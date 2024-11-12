@@ -14,6 +14,7 @@ import blimpy.io.sigproc
 
 from blimpy.io.fil_reader import FilReader
 from blimpy.io.hdf_reader import H5Reader
+from blimpy.io.fits_reader import FITSReader
 
 def open_file(filename, f_start=None, f_stop=None,t_start=None, t_stop=None,load_data=True,max_load=None):
     """Open a HDF5 or filterbank file
@@ -25,6 +26,7 @@ def open_file(filename, f_start=None, f_stop=None,t_start=None, t_stop=None,load
     ================== ==================================================
     h5, hdf5           HDF5 format
     fil                fil format
+    fits               FITS format
     *other*            Will raise NotImplementedError
     ================== ==================================================
 
@@ -37,7 +39,7 @@ def open_file(filename, f_start=None, f_stop=None,t_start=None, t_stop=None,load
     filename = os.path.expandvars(os.path.expanduser(filename))
     # Get file extension to determine type
     ext = filename.split(".")[-1].strip().lower()
-
+    
     if six.PY3:
         ext = bytes(ext, 'ascii')
 
@@ -48,4 +50,10 @@ def open_file(filename, f_start=None, f_stop=None,t_start=None, t_stop=None,load
     if blimpy.io.sigproc.is_filterbank(filename):
         # Open FIL file
         return FilReader(filename, f_start=f_start, f_stop=f_stop, t_start=t_start, t_stop=t_stop, load_data=load_data, max_load=max_load)
+
+#    if blimpy.io.sigproc.is_fits(filename):
+    if ext==b'fits':
+        # Open FITS file
+        return FITSReader(filename, f_start=f_start, f_stop=f_stop, t_start=t_start, t_stop=t_stop, load_data=load_data, max_load=max_load)
+
     raise NotImplementedError('Cannot open this type of file with Waterfall: {}'.format(filename))

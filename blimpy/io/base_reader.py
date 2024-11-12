@@ -132,7 +132,9 @@ class Reader(object):
         """
 
         #Set up the data type
-        if self._n_bytes  == 4:
+        if self._n_bytes == 8:
+            return 'float64'
+        elif self._n_bytes  == 4:
             return 'float32'
         elif self._n_bytes  == 2:
             return 'uint16'
